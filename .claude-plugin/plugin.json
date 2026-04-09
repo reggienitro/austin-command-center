@@ -1,0 +1,10 @@
+{
+  "name": "austin-command-center",
+  "version": "0.1.0",
+  "description": "Austin's personal command center — session bootstrapping, project routing, handoff generation, and backlog management across HububApp, article-to-audio, Morning Briefing, and claude-config.",
+  "author": {
+    "name": "Austin Ettefagh"
+  },
+  "repository": "https://github.com/reggienitro/austin-command-center",
+  "keywords": ["personal", "command-center", "notion", "backlog", "handoff"]
+}
