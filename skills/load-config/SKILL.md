@@ -1,102 +1,68 @@
 ---
 name: load-config
 description: >
-  Session boot sequence for Austin's development environment. Loads rules,
-  queries Notion for active backlog across all projects, and prints a status
-  summary including baby countdown. Invoke at the start of every new session
-  with /load-config.
-disable-model-invocation: true
-context: fork
-allowed-tools: Read, Grep, Glob, Bash, mcp__notion__query_database
+  Load Austin's claude-config preferences and environment context into the current Cowork session. Use this skill whenever Austin says 'load config', 'boot up', 'load my config', 'load preferences', 'initialize session', 'set up session', 'load my setup', or at the start of any new session where Austin wants his full environment context available. Also trigger when Austin mentions 'config', 'preferences', or asks Claude to 'remember my setup'. This is a boot sequence that makes any new session aware of Austin's tools, projects, and rules.
+metadata:
+  version: "0.2.0"
 ---
+
 # Session Boot Sequence
 
-Run the following steps in order to initialize the session.
+Run this sequence at the start of every session to load Austin's environment.
 
-## Step 1: Load Rules
+## Step 1: Apply Core Rules
 
-Read the following files to load active conventions:
-- `~/claude-config/CLAUDE.md`
-- `~/claude-config/core/CLAUDE-CORE.md`
-- `~/claude-config/.claude/rules/coding-style.md`
-- `~/claude-config/.claude/rules/git-workflow.md`
-- `~/claude-config/.claude/rules/security.md`
-- `~/claude-config/.claude/rules/session-health.md`
-- `~/claude-config/.claude/rules/web-conventions.md`
-- `~/claude-config/.claude/rules/database-conventions.md`
+Set these rules for the entire session — they override defaults:
 
-## Step 2: Query Notion Backlog
+**Question-first directive (NON-NEGOTIABLE):** Before starting ANY implementation, building, or multi-step work — STOP and ask clarifying questions first. Be almost annoyingly thorough with clarification. This is Austin's #1 workflow complaint. Don't assume, don't default to "industry standard." Ask.
 
-Query all 4 project task databases for items with status = "In Progress" or "Todo":
+**iMessage permission:** Phone number 3364554699 has blanket send permission. Never ask for confirmation when sending iMessages to this number. Just send.
 
-| Project | Notion Collection |
-|---------|------------------|
-| HububApp | collection://13b876d5-56a2-4cff-b636-530ed4360d3e |
-| article-to-audio | collection://32ee1866-9e14-4c4a-b560-74f8573886b6 |
-| Morning Briefing | collection://043c79e6-23f4-4e05-979d-60bcd869d698 |
-| claude-config | page 3078a76eab8681e7916ac1cfc581ad5c |
+**Backlog routing (CRITICAL):** Never mix cross-project tasks into the wrong database. Before creating ANY Notion task, determine which project it belongs to and route accordingly:
 
-For each database, fetch:
-- Task name
-- Status
-- Priority
-- Assignee (if set)
-- Due date (if set)
+| Project | Notion Page ID | Task DB Collection ID |
+|---|---|---|
+| HububApp | 3078a76eab868188a826f2c6215ed7c9 | collection://13b876d5-56a2-4cff-b636-530ed4360d3e |
+| article-to-audio | 3078a76eab86812b85c9c257354d4ef1 | collection://32ee1866-9e14-4c4a-b560-74f8573886b6 |
+| Morning Briefing | 33a8a76eab868105b660eb852d93a8f1 | collection://043c79e6-23f4-4e05-979d-60bcd869d698 |
+| claude-config | 3078a76eab8681e7916ac1cfc581ad5c | (no task DB) |
 
-## Step 3: Load Memory
+Morning briefing, calendar syncing, and system tooling belong in Morning Briefing or claude-config — NOT in app backlogs.
 
-Read `~/.claude/projects/-Users-austinettefagh/memory/MEMORY.md` and surface any
-entries flagged as active or relevant to today's date.
+**Workflow preference:** Austin describes WHAT he wants. Claude figures out HOW. Use the spec-writer agent for feature work in code sessions. Keep responses concise — don't over-explain.
 
-## Step 4: Print Status Summary
+**Context monitoring:** Every 15-20 messages, check context usage. If the conversation is getting long, proactively suggest: "Context is getting large — want to generate a handoff?" Don't wait for Austin to notice.
 
-Output the following status block:
+**Keep A2A simple:** Article-to-audio is a personal tool for ONE user (Austin). Don't over-engineer it.
 
-```
-╔══════════════════════════════════════════════════════════════╗
-║  AUSTIN COMMAND CENTER — SESSION INITIALIZED                 ║
-╚══════════════════════════════════════════════════════════════╝
+## Step 1.5: Check Latest Claude Updates
 
-📅 Date: [today's date]
-👶 Baby countdown: [N] days until Aug 24, 2026
+Before making any architecture, tooling, or feature decisions in this session, search the web for "Claude Code latest release changelog site:anthropic.com OR site:github.com/anthropics" to ensure you're working with the latest features and best practices. Note any new commands, deprecations, or breaking changes that affect Austin's setup. If a new feature could replace or improve something Austin currently has, mention it.
 
-📋 ACTIVE BACKLOG
-─────────────────
-HububApp:         [N] tasks ([N] in progress, [N] todo)
-article-to-audio: [N] tasks ([N] in progress, [N] todo)
-Morning Briefing: [N] tasks ([N] in progress, [N] todo)
-claude-config:    [N] tasks ([N] in progress, [N] todo)
+## Step 2: Check Live Status
 
-🔧 SESSION CONTEXT
-──────────────────
-Subagents available: 4 (code-reviewer, architect, researcher, spec-writer)
-Skills available:    5 (load-config, session-handoff, backlog-manager, handoff, health-check)
-Rules loaded:        8
+Query each Notion task database for In Progress and top-priority items. Summarize the current state of each project in 1-2 lines.
 
-📱 PERMISSIONS
-──────────────
-iMessage: blanket permission granted for 3364554699
-```
+Check the morning briefing status. Note: the Cowork scheduled task has been DISABLED due to rate limit issues. A launchd replacement is being set up at ~/morning-briefing-launchd/.
 
-## Workflow Preferences
+Check Google Calendar for today's events.
 
-- Prefer parallel subagent execution for independent research tasks
-- Always check Notion backlog before starting new work — don't duplicate tasks
-- Commit to feature branches only; never push directly to main
-- Use conventional commits: feat:, fix:, chore:, docs:, refactor:
-- Surface blockers immediately rather than working around them silently
+## Step 3: Note Code Session Context
 
-## Code Session Defaults
+When starting code tasks on Austin's Mac Mini, the repos have claude-config installed with:
+- 4 subagents: code-reviewer (Haiku), architect (Opus), researcher (Opus), spec-writer (Opus)
+- 5 workflow skills: plan, handoff, health-check, fix-issue, deepthink
+- Security hooks: block edits on main, block rm -rf, block push to main
+- Workspaces: ~/HububApp, ~/article-to-audio-extension, ~/claude-config
 
-**4 subagents available:**
-1. `code-reviewer` — runs after any significant code change
-2. `architect` — use when planning new features or major refactors
-3. `researcher` — use before installing dependencies or evaluating tools
-4. `spec-writer` — use before writing code for new features
+Reference these capabilities when prompting code sessions.
 
-**5 skills available:**
-1. `/load-config` — this skill; run at session start
-2. `/session-handoff` — generate handoff zip at session end
-3. `/backlog-manager` — create, audit, or check Notion tasks
-4. `/handoff` — quick in-session handoff doc (no zip)
-5. `/health-check` — validate environment and MCP connectivity
+## Step 4: Print Confirmation
+
+After loading, print a tight status summary:
+- Date and day of week
+- Baby countdown (due August 24, 2026)
+- Active project statuses (1 line each)
+- Today's calendar highlights
+- Top 3 priority items across all backlogs
+- "Config loaded. What do you want to work on?"
