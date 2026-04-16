@@ -1,7 +1,7 @@
 # austin-command-center — Project Constitution
 
 ## Overview
-Austin's personal Claude Code plugin. Provides session bootstrapping (`/load-config`), handoff generation (`/session-handoff`), and cross-project backlog management (`/backlog-manager`). Installed via `claude plugin add` and consumed by both Claude Code CLI sessions and Cowork desktop sessions. This is the operational glue that keeps multi-project work consistent across sessions.
+Austin's personal Claude Code plugin. Provides session bootstrapping (`/load-config`), handoff generation (`/session-handoff`), cross-project backlog management (`/backlog-manager`), opportunity scanning (`/scouter-scan`), market signal detection (`/sentinel-scan`), and Notion task routing (`/notion-route`). Installed via `claude plugin add` and consumed by both Claude Code CLI sessions and Cowork desktop sessions. This is the operational glue that keeps multi-project work consistent across sessions.
 
 ## Architecture
 
@@ -14,8 +14,14 @@ austin-command-center/
   │   │   └── SKILL.md     ← Session boot sequence: rules, Notion status, calendar check
   │   ├── session-handoff/
   │   │   └── SKILL.md     ← Generates handoff package with live Notion data + kickoff prompt
-  │   └── backlog-manager/
-  │       └── SKILL.md     ← CRUD for Notion task databases with strict project routing
+  │   ├── backlog-manager/
+  │   │   └── SKILL.md     ← CRUD for Notion task databases with strict project routing
+  │   ├── scouter-scan/
+  │   │   └── SKILL.md     ← Freelance gig, micro-SaaS, and trending market scanner
+  │   ├── sentinel-scan/
+  │   │   └── SKILL.md     ← Stock and crypto signal detection (Finnhub + CoinGecko)
+  │   └── notion-route/
+  │       └── SKILL.md     ← Notion task creation with strict project-to-DB routing
   └── README.md            ← Usage documentation
 ```
 
@@ -29,7 +35,10 @@ austin-command-center/
 | `skills/load-config/SKILL.md` | **Session boot:** loads rules, checks Notion task status across 4 projects, reads calendar, prints confirmation |
 | `skills/session-handoff/SKILL.md` | **Handoff generator:** captures git state, queries all 3 Notion task DBs, reads memory index, writes PROJECT_STATE.md + KICKOFF_PROMPT.md |
 | `skills/backlog-manager/SKILL.md` | **Task CRUD:** create tasks with strict project routing, audit stale/broken tasks, check status across all databases |
-| `README.md` | Usage docs for all 3 skills |
+| `skills/scouter-scan/SKILL.md` | **Opportunity scanner:** freelance gigs, micro-SaaS ideas, trending markets matching Austin's skills; delivers top 5 via iMessage |
+| `skills/sentinel-scan/SKILL.md` | **Market scanner:** stock and crypto signal detection using Finnhub + CoinGecko; scores signals 1-10, delivers top picks via iMessage |
+| `skills/notion-route/SKILL.md` | **Task router:** creates Notion tasks with strict project-to-database routing; enforces title conventions and deduplication |
+| `README.md` | Usage docs for all 6 skills |
 
 ## Notion Project Routing (CRITICAL)
 
@@ -41,6 +50,7 @@ The backlog manager enforces strict routing — tasks must go to the correct Not
 | article-to-audio | `collection://32ee1866-9e14-4c4a-b560-74f8573886b6` | RSS feeds, TTS, audio pipelines, news ingestion |
 | Morning Briefing | `collection://043c79e6-23f4-4e05-979d-60bcd869d698` | Briefing format, delivery, scheduling |
 | claude-config | page `3078a76eab8681e7916ac1cfc581ad5c` | Claude rules, skills, agents, config |
+| Scheduled Task Runs | `collection://49af2959-04f5-4d6f-befc-80cdf1f00d55` | Task run logging, observability |
 
 ## Install & Use
 
@@ -75,6 +85,24 @@ claude plugin add reggienitro/austin-command-center
 ### `/backlog-manager` — Task Management
 - `create [project] "[title]" [priority]` — checks for duplicates, then creates
 - `audit [project|all]` — flags stale In Progress, missing priority, done-but-not-archived
+
+### `/scouter-scan` — Opportunity Scanner
+1. Scan freelance boards (Upwork, Toptal, r/forhire), micro-SaaS communities (IndieHackers, ProductHunt), and trending markets
+2. Filter for Austin's skill stack (AI automation, React/Next.js, Salesforce, Chrome extensions)
+3. Score opportunities 1-10 by skill match, effort-to-reward, time-to-revenue
+4. Deliver top 5 via iMessage
+
+### `/sentinel-scan` — Market Scanner
+1. Pull stock signals via Finnhub (gainers/losers, volume spikes, earnings surprises, insider activity)
+2. Pull crypto signals via CoinGecko (top movers, volume anomalies, trending coins, Fear & Greed index)
+3. Score signals 1-10 across momentum, volume, catalyst, risk
+4. Deliver top 5 stocks + top 5 crypto via iMessage
+
+### `/notion-route` — Task Router
+1. Parse task description for project keywords
+2. Route to correct Notion database using hardcoded project-to-DB mapping
+3. Enforce: verb-first titles, duplicate check, priority assignment, default status = Todo
+4. Special handling: claude-config (sub-pages, no task DB), cross-project routing, Scouter/Sentinel → Morning Briefing
 
 ## Workflow Rules
 - Direct pushes to main (personal plugin, single developer)
