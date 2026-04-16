@@ -1,13 +1,11 @@
 ---
 name: session-handoff
 description: >
-  Generates a structured session handoff package with live Notion data, memory
-  snapshot, and a ready-to-paste kickoff prompt for the next session. Produces
-  PROJECT_STATE.md, KICKOFF_PROMPT.md, MEMORY_INDEX.md, and all memory files.
-  Invoke with /session-handoff.
+  Generate a handoff zip with live Notion data, memory snapshot, and kickoff prompt for the next session.
+  Triggers: 'session handoff', 'handoff', 'pack up session', 'transfer context', 'generate handoff'.
 disable-model-invocation: true
 context: fork
-allowed-tools: Read, Grep, Glob, Bash, mcp__notion__query_database
+allowed-tools: Read, Grep, Glob, Bash
 ---
 # Session Handoff Generator
 

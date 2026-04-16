@@ -1,7 +1,8 @@
 ---
 name: load-config
 description: >
-  Load Austin's claude-config preferences and environment context into the current Cowork session. Use this skill whenever Austin says 'load config', 'boot up', 'load my config', 'load preferences', 'initialize session', 'set up session', 'load my setup', or at the start of any new session where Austin wants his full environment context available. Also trigger when Austin mentions 'config', 'preferences', or asks Claude to 'remember my setup'. This is a boot sequence that makes any new session aware of Austin's tools, projects, and rules.
+  Boot sequence that loads rules, Notion project status, and calendar into a new session.
+  Triggers: 'load config', 'boot up', 'initialize session', 'load preferences', 'set up session', 'load my setup', 'config', 'remember my setup'.
 metadata:
   version: "0.2.0"
 ---

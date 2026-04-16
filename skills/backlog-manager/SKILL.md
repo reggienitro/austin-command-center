@@ -1,13 +1,11 @@
 ---
 name: backlog-manager
 description: >
-  Manages Notion task databases with strict project routing. Use to create new
-  tasks, audit existing ones, or check task status across HububApp,
-  article-to-audio, Morning Briefing, and claude-config. Invoke with
-  /backlog-manager [action] [project] [details].
+  CRUD for Notion task databases with strict project routing across HububApp, A2A, Morning Briefing, and claude-config.
+  Triggers: 'backlog', 'create task', 'audit tasks', 'task status', 'add task to notion'.
 disable-model-invocation: true
 context: fork
-allowed-tools: Read, Grep, Glob, Bash, mcp__notion__query_database, mcp__notion__create_page, mcp__notion__update_page
+allowed-tools: Read, Grep, Glob, Bash
 ---
 # Backlog Manager
 
